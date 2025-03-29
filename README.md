@@ -58,7 +58,6 @@ Este README.md está organizado nas seguintes seções:
     - Fornecedor
     - Causa da vulnerabilidade
     - Impacto da vulnerabilidade
-  - Sistema de votação ponderada para combinar os resultados dos diferentes LLMs.
 - **Exportação de Dados:**
   - Exporta os dados processados e categorizados para arquivos CSV ou JSON.
 - **Extensibilidade:**
@@ -201,7 +200,7 @@ python src/main.py --provider <ai_provider> --data-source <data_source> --export
     python src/main.py --provider 'google' --data-source 'nvd' --search-params "OpenDDS" "RTI Connext DDS" --export-format csv --output-file vulnerabilidades.csv
     ```
 
-    - `--provider`: Usa Gemini, ChatGPT e Llama, com votação.
+    - `--provider`: Usa Gemini, ChatGPT, Llama ou outros.
     - `--data-source both`: Usa NVD e Vulners.
     - `--search-params`: Busca por vulnerabilidades relacionadas a "OpenDDS" _e_ "RTI Connext DDS".
     - As chaves de API são fornecidas.
@@ -416,7 +415,7 @@ Esta seção descreve como reproduzir os experimentos apresentados no artigo.
 
 - **Reprodutibilidade:** Os resultados _exatos_ podem variar um pouco devido a:
   - **Atualizações nas bases de dados:** O NVD e o Vulners são constantemente atualizados. Novas vulnerabilidades podem ser adicionadas, e as informações sobre vulnerabilidades existentes podem ser modificadas.
-  - **Estocasticidade dos LLMs:** Os LLMs (Gemini, Llama, DeepSeek) não são completamente determinísticos*. Pequenas variações nas respostas são esperadas, mesmo com o mesmo prompt e os mesmos dados de entrada. O sistema de votação ponderada ajuda a mitigar isso, mas não elimina \_completamente* a variabilidade.
+  - **Estocasticidade dos LLMs:** Os LLMs (Gemini, Llama, DeepSeek ou outros) não são completamente determinísticos\*. Pequenas variações nas respostas são esperadas, mesmo com o mesmo prompt e os mesmos dados de entrada.
 - **Tempo de Execução:** A coleta de dados, especialmente do Vulners, e a categorização com os LLMs _podem levar um tempo considerável_ (dependendo do número de termos de busca, da quantidade de vulnerabilidades encontradas e da velocidade da sua conexão com a internet e das APIs). Principalmente para rodar modelos locais, como Llama3 (DeepHermes-3-Llama-3-8B-Preview3)
 - **Erros/Exceções:**
 - O código fornecido tem _algum_ tratamento de erros (e.g., `try...except` para chamadas de API), mas _não é exaustivo_. É _possível_ que ocorram erros durante a execução (e.g., problemas de conexão, limites de taxa de API, etc.).
@@ -481,7 +480,6 @@ O código-fonte está organizado da seguinte forma:
 - `categorization/`: Contém os módulos relacionados à categorização de vulnerabilidades com IA.
   - `categorizer.py`: Implementa a classe `Categorizer`, responsável por interagir com as APIs dos LLMs e combinar os resultados.
   - `__init__.py`
-  - `voting.py`: Implementa um sistema de votação.
 - `data_sources/`: Contém os módulos para extrair dados de diferentes fontes.
   - `nvd_extractor.py`: Funções para acessar a API do NVD.
   - `vulners_extractor.py`: Funções para acessar a API do Vulners.
