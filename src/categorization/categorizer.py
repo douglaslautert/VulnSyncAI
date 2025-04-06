@@ -473,24 +473,28 @@ class Categorizer:
                 """
 
             try:
-                tokenizer = AutoTokenizer.from_pretrained(model)
+                global model_local, model_anterior
                 
-                if(config):
-                    pairs = config.split(',')
+                if(model_local is None or model_anterior != model):
+                    tokenizer = AutoTokenizer.from_pretrained(model)
+                    model_anterior = model
+                    
+                    if(config):
+                        pairs = config.split(',')
 
-                    # Converter cada par chave=valor em um dicionário
-                    config_dict = {}
-                    for pair in pairs:
-                        key, value = pair.split('=')
-                        config_dict[key] = value
-                    model = AutoModelForCausalLM.from_pretrained(model,**config_dict)
-                else:
-                    model = AutoModelForCausalLM.from_pretrained(model)
+                        # Converter cada par chave=valor em um dicionário
+                        config_dict = {}
+                        for pair in pairs:
+                            key, value = pair.split('=')
+                            config_dict[key] = value
+                        model_local = AutoModelForCausalLM.from_pretrained(model,**config_dict)
+                    else:
+                        model_local = AutoModelForCausalLM.from_pretrained(model)
                 
                 messages=[{"role": "user", "content": local_prompt}]
                 formatted_prompt = tokenizer.apply_chat_template(messages, tokenize=False)
 
-                pipe = pipeline("text-generation", model= model, tokenizer = tokenizer, max_new_tokens=250)
+                pipe = pipeline("text-generation", model= model_local, tokenizer = tokenizer, max_new_tokens=250)
                 #print(pipe(formatted_prompt)[0]["generated_text"])
                 raw_output = pipe(formatted_prompt)[0]["generated_text"]
                 result = extract_assistant_response(raw_output, local_prompt)
