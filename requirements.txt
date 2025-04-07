@@ -5,3 +5,4 @@ psutil
 huggingface_hub
 pyyaml
 openai
+torch
