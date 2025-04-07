@@ -1,4 +1,5 @@
 import requests
+import asyncio
 import json
 import os
 from .data_source import DataSourceBase
@@ -26,6 +27,7 @@ class VulnersExtractor(DataSourceBase):
             'apiKey': api_key
         }
         try:
+            await asyncio.sleep(5)
             response = requests.post(base_url, data=json.dumps(data))
             response.raise_for_status()
             return response.json()
