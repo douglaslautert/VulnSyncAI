@@ -125,7 +125,7 @@ dmypy.json
 # Data files
 !/dataset/*
 
-!search_params/*.txt
+!search_files/*.txt
 
 !*vulnsyncai_dataset/*.csv
 

@@ -152,9 +152,10 @@ Caso a execução do artefato ofereça qualquer tipo de risco, esta seção deta
     Caso tenha problemas, instale individualmente:
 
     ```bash
-      pip install transformers
-      pip install psutil
       pip install requests
+      pip install transformers
+      pip install asyncio
+      pip install psutil
       pip install huggingface_hub
     ```
 
