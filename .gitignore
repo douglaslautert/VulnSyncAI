@@ -128,6 +128,7 @@ dmypy.json
 !search_files/*.txt
 
 !*vulnsyncai_dataset/*.csv
+!requirements.txt
 
 
 
