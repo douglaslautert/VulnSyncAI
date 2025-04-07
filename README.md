@@ -233,6 +233,17 @@ python src/main.py --provider <ai_provider> --data-source <data_source> --export
 
 Esta seção descreve como reproduzir os experimentos apresentados no artigo.
 
+**Configurações de credenciais**
+
+Para iniciar a reprodução dos experimentos apresentados no trabalho "VulnSyncAI: PLN e LLMs para Construção e Atualização Contínua de Datasets de Vulnerabilidades" são necessárias as seguintes credenciais que estão no arquivo do "Apêndice" separado:
+
+- VULNERS_API_KEY
+- GEMINI_API_KEY
+- DEEPSEEK_API_KEY
+- HUGGINGFACE_API_KEY
+
+Essas credenciais devem ser alteradas no arquivo de configuração, `VulnSyncAI\src\config.yaml`
+
 **Reivindicação #1 (Coleta e Categorização de Vulnerabilidades em DDS)**
 
 - **Objetivo:** Demonstrar a capacidade da ferramenta de coletar dados de vulnerabilidades relacionadas a DDS, pré-processá-los, extrair informações e categorizá-los usando Gemini Pro 1.5 e Llama3 (DeepHermes-3-Llama-3-8B-Preview3).
@@ -284,7 +295,7 @@ Esta seção descreve como reproduzir os experimentos apresentados no artigo.
 
   1. **Configuração:**
 
-     - Crie um arquivo (ex: `search_params_UAV.txt`) contendo os termos de busca relacionados a protocolos de roteamento de UAVs (ou utilize o arquivo que está no diretório search_params/search_params_UAV.txt):
+     - Crie um arquivo (ex: `search-params_UAV.txt`) contendo os termos de busca relacionados a protocolos de roteamento de UAVs (ou utilize o arquivo que está no diretório search_params/search-params_UAV.txt):
 
      ```txt
      AODV
@@ -296,13 +307,13 @@ Esta seção descreve como reproduzir os experimentos apresentados no artigo.
   2. **Execução para o cenário de categorização do Gemini 1.5 Pro fonte de dados NVD:** Execute o seguinte comando (adaptando os nomes dos arquivos e as chaves de API, se necessário):
 
   ```bash
-    python src/main.py --provider 'google' --data-source 'nvd' --search-file search_files/search_params_UAV.txt --export-format csv --output-file UAV_vulnerabilities_categorized-GEMINI-API.csv
+    python src/main.py --provider 'google' --data-source 'nvd' --search-file search_files/search-params_UAV.txt --export-format csv --output-file UAV_vulnerabilities_categorized-GEMINI-API.csv
   ```
 
   3. **Execução para o cenário de categorização do Llam3 (DeepHermes-3-Llama-3-8B-Preview3) fonte de dados NVD:** Execute o seguinte comando (adaptando os nomes dos arquivos se necessário):
 
   ```bash
-    python src/main.py --provider 'llama3' --data-source 'nvd' --search-file search_files/search_params_UAV.txt --export-format csv --output-file UAV_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
+    python src/main.py --provider 'llama3' --data-source 'nvd' --search-file search_files/search-params_UAV.txt --export-format csv --output-file UAV_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
   ```
 
   4. **Verificação:**
@@ -321,7 +332,7 @@ Esta seção descreve como reproduzir os experimentos apresentados no artigo.
   1. **Configuração:**
 
      - Certifique-se de que as chaves de API (Vulners, Gemini, ChatGPT, Llama) estão configuradas corretamente (variáveis de ambiente ou argumentos de linha de comando).
-     - Crie um arquivo (ex: `search_params_MQTT.txt`) contendo os termos de busca relacionados a MQTT:
+     - Crie um arquivo (ex: `search-params_MQTT.txt`) contendo os termos de busca relacionados a MQTT:
 
        ```txt
        Eclipse Mosquitto
@@ -334,37 +345,37 @@ Esta seção descreve como reproduzir os experimentos apresentados no artigo.
   2. **Execução para o cenário de categorização do Gemini 1.5 Pro fonte de dados NVD:** Execute o seguinte comando (adaptando os nomes dos arquivos e as chaves de API, se necessário):
 
   ```bash
-    python src/main.py --provider 'google' --data-source 'nvd' --search-file search_files/search_params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-NVD-GEMINI-API.csv
+    python src/main.py --provider 'google' --data-source 'nvd' --search-file search_files/search-params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-NVD-GEMINI-API.csv
   ```
 
   3. **Execução para o cenário de categorização do Gemini 1.5 Pro fonte de dados VULNERS:** Execute o seguinte comando (adaptando os nomes dos arquivos e as chaves de API, se necessário):
 
   ```bash
-    python src/main.py --provider 'google' --data-source 'vulners' --search-file search_files/search_params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-VULNERS-GEMINI-API.csv
+    python src/main.py --provider 'google' --data-source 'vulners' --search-file search_files/search-params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-VULNERS-GEMINI-API.csv
   ```
 
   4. **Execução para o cenário de categorização do Llam3 (DeepHermes-3-Llama-3-8B-Preview3) fonte de dados NVD:** Execute o seguinte comando (adaptando os nomes dos arquivos se necessário):
 
   ```bash
-    python src/main.py --provider 'llama3' --data-source 'nvd' --search-file search_files/search_params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
+    python src/main.py --provider 'llama3' --data-source 'nvd' --search-file search_files/search-params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
   ```
 
   5. **Execução para o cenário de categorização do Llam3 (DeepHermes-3-Llama-3-8B-Preview3) fonte de dados VULNERS:** Execute o seguinte comando (adaptando os nomes dos arquivos se necessário):
 
   ```bash
-    python src/main.py --provider 'llama3' --data-source 'vulners' --search-file search_files/search_params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-VULNERS-LLAMA3-LOCAL.csv
+    python src/main.py --provider 'llama3' --data-source 'vulners' --search-file search_files/search-params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-VULNERS-LLAMA3-LOCAL.csv
   ```
 
   6. **Execução para o cenário de categorização do DeepSeek (API) fonte de dados NVD:** Execute o seguinte comando (adaptando os nomes dos arquivos se necessário):
 
   ```bash
-    python src/main.py --provider 'deepseek' --data-source 'nvd' --search-file search_files/search_params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-NVD-DEEPSEEK.csv
+    python src/main.py --provider 'deepseek' --data-source 'nvd' --search-file search_files/search-params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-NVD-DEEPSEEK.csv
   ```
 
   7. **Execução para o cenário de categorização do DeepSeek (API) fonte de dados VULNERS:** Execute o seguinte comando (adaptando os nomes dos arquivos se necessário):
 
   ```bash
-    python src/main.py --provider 'deepseek' --data-source 'vulners' --search-file search_files/search_params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-VULNERS-DEEPSEEK.csv
+    python src/main.py --provider 'deepseek' --data-source 'vulners' --search-file search_files/search-params_MQTT.txt --export-format csv --output-file MQTT_vulnerabilities_categorized-VULNERS-DEEPSEEK.csv
   ```
 
   4. **Verificação:**
@@ -396,13 +407,13 @@ Esta seção descreve como reproduzir os experimentos apresentados no artigo.
   2. **Execução para o cenário de categorização do Gemini 1.5 Pro fonte de dados NVD:** Execute o seguinte comando (adaptando os nomes dos arquivos e as chaves de API, se necessário):
 
   ```bash
-    python src/main.py --provider 'google' --data-source 'nvd' --search-file search_files/search_params_UAV.txt --export-format csv --output-file BROWSERS_vulnerabilities_categorized-NVD-GEMINI-API.csv
+    python src/main.py --provider 'google' --data-source 'nvd' --search-file search_files/search-params_BROWSERS.txt --export-format csv --output-file BROWSERS_vulnerabilities_categorized-NVD-GEMINI-API.csv
   ```
 
   3. **Execução para o cenário de categorização do Llam3 (DeepHermes-3-Llama-3-8B-Preview3) fonte de dados NVD:** Execute o seguinte comando (adaptando os nomes dos arquivos se necessário):
 
   ```bash
-    python src/main.py --provider 'llama3' --data-source 'nvd' --search-file search_files/search_params_UAV.txt --export-format csv --output-file BROWSERS_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
+    python src/main.py --provider 'llama3' --data-source 'nvd' --search-file search_files/search-params_BROWSERS.txt --export-format csv --output-file BROWSERS_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
   ```
 
   4. **Verificação:**
@@ -411,6 +422,91 @@ Esta seção descreve como reproduzir os experimentos apresentados no artigo.
        - Colunas com os campos básicos (ID, descrição, etc.).
        - Colunas adicionais com as categorias extraídas pelos LLMs (CWE, explicação, fornecedor, causa, impacto).
        - Os valores devem corresponder, aproximadamente, aos resultados apresentados nas tabelas e gráficos do artigo (pequenas variações são esperadas devido à natureza estocástica dos LLMs).
+
+**Geração da análise dos resultados**
+
+Para reproduzir os dados apresentados no trabalho com base nos datasets gerados é disponbilizado uma ferramenta que recebe o arquivo do dataset gerado em formato CSV e retorna gráficos e dados conforme o dataset.
+
+- **Estrutura de Arquivos**: O script `analysis.py` deve estar localizado no mesmo diretório onde os datasets estão armazenados ou no diretório raiz do projeto.
+
+Após gerar os datasets eles vão estár disponíveis para a geração dos resultados:
+
+BROWSERS Vulnerabilities:
+
+- BROWSERS_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
+- BROWSERS_vulnerabilities_categorized-NVD-GEMINI-API.csv
+
+MQTT Vulnerabilities:
+
+- MQTT_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
+- MQTT_vulnerabilities_categorized-NVD-GEMINI-API.csv
+- MQTT_vulnerabilities_categorized-VULNERS-LLAMA3-LOCAL.csv
+- MQTT_vulnerabilities_categorized-VULNERS-GEMINI.csv
+- MQTT_vulnerabilities_categorized-VULNERS-DEEPSEEK.csv
+- MQTT_vulnerabilities_categorized-NVD-DEEPSEEK.csv
+
+DDS Vulnerabilities:
+
+- DDS_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
+- DDS_vulnerabilities_categorized-NVD-GEMINI-API.csv
+
+UAV Vulnerabilities:
+
+- UAV_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
+- UAV_vulnerabilities_categorized-GEMINI-API.csv
+
+**Como Executar a Análise**
+
+Passo 1: Preparar o Ambiente
+
+- Certifique-se de que todos os arquivos CSV estão no mesmo diretório ou forneça o caminho completo para cada arquivo.
+
+Passo 2: Executar o Script
+
+Use o seguinte comando para executar o script para os datasets gerados:
+
+**Datasets DDS**
+
+```bash
+python analysis.py google_dataset/DDS_vulnerabilities_categorized-NVD-GEMINI-API.csv llama3_dataset/DDS_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
+```
+
+**Datasets UAV**
+
+```bash
+python analysis.py google_dataset/UAV_vulnerabilities_categorized-GEMINI-API.csv llama3_dataset/UAV_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv
+```
+
+**Datasets MQTT**
+
+```bash
+python analysis.py google_dataset/MQTT_vulnerabilities_categorized-NVD-GEMINI-API.csv google_dataset/MQTT_vulnerabilities_categorized-VULNERS-GEMINI-API.csv
+```
+
+```bash
+python analysis.py llama3_dataset/MQTT_vulnerabilities_categorized-NVD-LLAMA3-LOCAL.csv llama3_dataset/MQTT_vulnerabilities_categorized-VULNERS-LLAMA3-LOCAL.csv
+```
+
+```bash
+python analysis.py deekseek_dataset/MQTT_vulnerabilities_categorized-NVD-DEEPSEEK.csv deekseek_dataset/MQTT_vulnerabilities_categorized-VULNERS-DEEPSEEK.csv
+```
+
+**Resultados**
+
+- Os resultados serão salvos na pasta analysis_results, organizada por dataset. Para cada dataset, os seguintes arquivos serão gerados:
+  - Log de Análise: <nome_do_dataset>\_analysis.txt
+  - Gráficos:
+    - vulnerabilities_by_vendor.png: Gráfico de barras mostrando a distribuição de vulnerabilidades por fornecedor.
+    - vulnerabilities_by_year.png: Gráfico de linha mostrando a distribuição de vulnerabilidades por ano.
+    - cvss_distribution.png: Histograma mostrando a distribuição dos scores CVSS.
+    - top_5_cwe.png: Gráfico de pizza mostrando as 5 categorias CWE mais frequentes.
+  - Descrição dos Logs:
+    - Total de Vulnerabilidades: Número total de vulnerabilidades no dataset.
+    - Distribuição por Fornecedor: Quantidade de vulnerabilidades por fornecedor.
+    - Distribuição por Ano: Quantidade de vulnerabilidades por ano.
+    - Estatísticas de CVSS Scores: Estatísticas descritivas (média, mediana, etc.) dos scores CVSS.
+    - Top 5 Categorias CWE: As 5 categorias CWE mais frequentes.
+    - Correlação entre Severidade e Fornecedor: - Tabela de contingência mostrando a relação entre severidade e fornecedor.
 
 **Observações Gerais (para todos os estudos de caso):**
 
