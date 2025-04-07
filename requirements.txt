@@ -6,3 +6,6 @@ huggingface_hub
 pyyaml
 openai
 torch
+pandas
+matplotlib
+altair
