@@ -3,3 +3,4 @@ transformers
 asyncio
 psutil
 huggingface_hub
+yaml
