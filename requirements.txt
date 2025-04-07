@@ -1,0 +1,11 @@
+requests
+transformers
+asyncio
+psutil
+huggingface_hub
+pyyaml
+openai
+torch
+pandas
+matplotlib
+altair
