@@ -3,4 +3,3 @@ transformers
 asyncio
 psutil
 huggingface_hub
-https://github.com/huggingface/transformers
