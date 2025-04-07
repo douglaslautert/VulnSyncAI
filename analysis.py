@@ -2,168 +2,116 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import altair as alt
+import sys
 
 # ***** CONFIGURATION *****
-CSV_FILE = "*.csv"  # Adjusted to use the DDSBuilder dataset
 OUTPUT_DIR = "analysis_results"
 # ***** END CONFIGURATION *****
 
-# Create the output directory if it doesn't exist
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+def analyze_dataset(csv_file):
+    # Extrair o nome base do arquivo CSV para criar a pasta de saída
+    dataset_name = os.path.splitext(os.path.basename(csv_file))[0]
+    dataset_output_dir = os.path.join(OUTPUT_DIR, dataset_name)
+    os.makedirs(dataset_output_dir, exist_ok=True)
 
-# Carregar o arquivo CSV
-df = pd.read_csv(CSV_FILE, sep=';', encoding='latin1')
+    # Criar arquivo de log para salvar os resultados do terminal
+    log_file_path = os.path.join(dataset_output_dir, f"{dataset_name}_analysis.txt")
+    log_file = open(log_file_path, "w")
 
-# Convert 'published' to datetime objects
-df['published'] = pd.to_datetime(df['published'], errors='coerce')
+    # Carregar o arquivo CSV
+    df = pd.read_csv(csv_file, sep=',', encoding='latin1')
 
-# Extract year, month, day of the week, and quarter
-df['year'] = df['published'].dt.year
-df['month'] = df['published'].dt.month
-df['day_of_week'] = df['published'].dt.day_name()
-df['quarter'] = df['published'].dt.quarter
+    # Convert 'published' para objetos datetime
+    df['published'] = pd.to_datetime(df['published'], errors='coerce')
 
+    # Extrair ano, mês, dia da semana e trimestre
+    df['year'] = df['published'].dt.year
+    df['month'] = df['published'].dt.month
+    df['day_of_week'] = df['published'].dt.day_name()
+    df['quarter'] = df['published'].dt.quarter
 
-# --- Descriptive Analysis ---
+    # --- Análise Descritiva ---
+    log_file.write(f"Análise do dataset: {csv_file}\n\n")
 
-# 1. Total Number of Vulnerabilities
-total_vulnerabilities = len(df)
-print(f"Total Number of Vulnerabilities: {total_vulnerabilities}")
+    # 1. Total de Vulnerabilidades
+    total_vulnerabilities = len(df)
+    log_file.write(f"Total de Vulnerabilidades: {total_vulnerabilities}\n")
 
-# 2. Distribution of Vulnerabilities by Vendor
-vendor_counts = df['vendor'].value_counts()
-print("\nDistribution of Vulnerabilities by Vendor:")
-print(vendor_counts)
+    # 2. Distribuição por Fornecedor
+    vendor_counts = df['vendor'].value_counts()
+    log_file.write("\nDistribuição de Vulnerabilidades por Fornecedor:\n")
+    log_file.write(vendor_counts.to_string() + "\n")
 
-# 3. Distribution of Vulnerabilities by Year
-vulnerabilities_per_year = df['year'].value_counts().sort_index()
-print("\nDistribution of Vulnerabilities by Year:")
-print(vulnerabilities_per_year)
+    # 3. Distribuição por Ano
+    vulnerabilities_per_year = df['year'].value_counts().sort_index()
+    log_file.write("\nDistribuição de Vulnerabilidades por Ano:\n")
+    log_file.write(vulnerabilities_per_year.to_string() + "\n")
 
-# 4. Distribution of CVSS Scores
-print("\nDescriptive Statistics of CVSS Scores:")
-print(df['cvss_score'].describe())
+    # 4. Estatísticas Descritivas de CVSS Scores
+    log_file.write("\nEstatísticas Descritivas de CVSS Scores:\n")
+    log_file.write(df['cvss_score'].describe().to_string() + "\n")
 
-# 5. Top 5 Most Frequent CWE Categories
-cwe_counts = df['cwe_category'].value_counts().head(5)
-print("\nTop 5 Most Frequent CWE Categories:")
-print(cwe_counts)
+    # 5. Top 5 Categorias CWE Mais Frequentes
+    cwe_counts = df['cwe_category'].value_counts().head(5)
+    log_file.write("\nTop 5 Categorias CWE Mais Frequentes:\n")
+    log_file.write(cwe_counts.to_string() + "\n")
 
-# 6. Correlation between Severity and Vendor
-print("\nContingency Table between Severity and Vendor:")
-contingency_table = pd.crosstab(df['vendor'], df['severity'])
-print(contingency_table)
+    # 6. Correlação entre Severidade e Fornecedor
+    contingency_table = pd.crosstab(df['vendor'], df['severity'])
+    log_file.write("\nTabela de Contingência entre Severidade e Fornecedor:\n")
+    log_file.write(contingency_table.to_string() + "\n")
 
-# --- Generating Charts ---
+    # --- Gerar Gráficos ---
+    df['cvss_score'] = df['cvss_score'] / 10
+    df['vendor'] = df['vendor'].str.upper()
+    vendor_counts.index = vendor_counts.index.str.upper()
+    font_size = 14
 
-# Assuming df is the pandas DataFrame with the 'cvss_score' column
-df['cvss_score'] = df['cvss_score'] / 10
-df['vendor'] = df['vendor'].str.upper()  # Convert vendor names to uppercase
-vendor_counts.index = vendor_counts.index.str.upper()  # Convert vendor names to uppercase
-# Set font size
-font_size = 14
+    # Gráfico 1: Vulnerabilidades por Fornecedor
+    plt.figure(figsize=(10, 6))
+    vendor_counts.plot(kind='bar')
+    plt.title("Distribuição de Vulnerabilidades por Fornecedor", fontsize=font_size)
+    plt.xlabel("Fornecedor", fontsize=font_size)
+    plt.ylabel("Número de Vulnerabilidades", fontsize=font_size)
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.savefig(os.path.join(dataset_output_dir, "vulnerabilities_by_vendor.png"))
+    plt.close()
 
-# 1. Distribution of Vulnerabilities by Vendor (Bar Chart)
-plt.figure(figsize=(10, 6))
-vendor_counts.plot(kind='bar')
-plt.title("Distribution of Vulnerabilities by Vendor", fontsize=font_size)
-plt.xlabel("Vendor", fontsize=font_size)
-plt.ylabel("Number of Vulnerabilities", fontsize=font_size)
-plt.xticks(rotation=45, ha='right')
-plt.tight_layout()
-plt.savefig(os.path.join(OUTPUT_DIR, "vulnerabilities_by_vendor.png"))
-plt.close()
+    # Gráfico 2: Vulnerabilidades por Ano
+    plt.figure(figsize=(10, 6))
+    vulnerabilities_per_year.plot(kind='line', marker='o')
+    plt.title("Distribuição de Vulnerabilidades por Ano", fontsize=font_size)
+    plt.xlabel("Ano", fontsize=font_size)
+    plt.ylabel("Número de Vulnerabilidades", fontsize=font_size)
+    plt.grid(True)
+    plt.savefig(os.path.join(dataset_output_dir, "vulnerabilities_by_year.png"))
+    plt.close()
 
-# 2. Distribution of Vulnerabilities by Year (Line Chart)
-plt.figure(figsize=(10, 6))
-vulnerabilities_per_year.plot(kind='line', marker='o')
-plt.title("Distribution of Vulnerabilities by Year", fontsize=font_size)
-plt.xlabel("Year", fontsize=font_size)
-plt.ylabel("Number of Vulnerabilities", fontsize=font_size)
-plt.grid(True)
-plt.savefig(os.path.join(OUTPUT_DIR, "vulnerabilities_by_year.png"))
-plt.close()
+    # Gráfico 3: Distribuição de CVSS Scores
+    plt.figure(figsize=(10, 6))
+    plt.hist(df['cvss_score'], bins=10, edgecolor='black')
+    plt.title("Distribuição de CVSS Scores", fontsize=font_size)
+    plt.xlabel("CVSS Score", fontsize=font_size)
+    plt.ylabel("Frequência", fontsize=font_size)
+    plt.savefig(os.path.join(dataset_output_dir, "cvss_distribution.png"))
+    plt.close()
 
-# 3. Distribution of CVSS Scores (Histogram)
-plt.figure(figsize=(10, 6))
-plt.hist(df['cvss_score'], bins=10, edgecolor='black')
-plt.title("Distribution of CVSS Scores", fontsize=font_size)
-plt.xlabel("CVSS Score", fontsize=font_size)
-plt.ylabel("Frequency", fontsize=font_size)
-plt.savefig(os.path.join(OUTPUT_DIR, "cvss_distribution.png"))
-plt.close()
+    # Gráfico 4: Top 5 Categorias CWE
+    plt.figure(figsize=(8, 8))
+    plt.pie(cwe_counts.values, labels=cwe_counts.index, autopct='%1.1f%%', startangle=90)
+    plt.title("Top 5 Categorias CWE Mais Frequentes", fontsize=font_size)
+    plt.savefig(os.path.join(dataset_output_dir, "top_5_cwe.png"))
+    plt.close()
 
-# 4. Top 5 Most Frequent CWE Categories (Pie Chart)
-plt.figure(figsize=(8, 8))
-plt.pie(cwe_counts.values, labels=cwe_counts.index, autopct='%1.1f%%', startangle=90)
-plt.title("Top 5 Most Frequent CWE Categories", fontsize=font_size)
-plt.savefig(os.path.join(OUTPUT_DIR, "top_5_cwe.png"))
-plt.close()
+    # Fechar o arquivo de log
+    log_file.close()
 
-# --- Generating Reports with Altair ---
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Uso: python analysis.py <arquivo_csv1> <arquivo_csv2> ...")
+        sys.exit(1)
 
-# 1. Vulnerabilities by Year and Vendor
-chart_year_vendor = alt.Chart(df).mark_bar().encode(
-    x='year:O',
-    y='count()',
-    color='vendor:N',
-    tooltip=['vendor:N', 'count()']
-).properties(
-    title='Vulnerabilities by Year and Vendor'
-).interactive()
-chart_year_vendor.save(os.path.join(OUTPUT_DIR, 'vulnerabilities_year_vendor.html'))
-
-# Set chart width and font size
-chart_width = 800
-font_size = 18  # Font size
-
-# Suggested Charts
-
-# Distribution of Top CWEs Over Time
-top_cwes = df['cwe_category'].value_counts().head(5).index.tolist()
-df_top_cwes = df[df['cwe_category'].isin(top_cwes)]
-
-chart_cwe_trend = alt.Chart(df_top_cwes).mark_bar().encode(
-    x=alt.X('year:O', axis=alt.Axis(labelFontSize=font_size, titleFontSize=font_size)),
-    y=alt.Y('count()', axis=alt.Axis(labelFontSize=font_size, titleFontSize=font_size)),
-    color=alt.Color('cwe_category:N', legend=alt.Legend(labelFontSize=25, titleFontSize=25)),  # Increase legend font size
-    tooltip=['year:O', 'cwe_category:N', 'count()']
-).properties(
-    width=chart_width
-).interactive()
-chart_cwe_trend.save(os.path.join(OUTPUT_DIR, 'cwe_trend.html'))
-
-# Distribution of Top CWEs by Volume
-chart_cwe_volume = alt.Chart(df_top_cwes).mark_bar().encode(
-    x=alt.X('cwe_category:N', axis=alt.Axis(labelFontSize=font_size, titleFontSize=font_size)),
-    y=alt.Y('count()', axis=alt.Axis(labelFontSize=font_size, titleFontSize=font_size)),
-    color=alt.Color('cwe_category:N', legend=alt.Legend(labelFontSize=25, titleFontSize=25)),  # Increase legend font size
-    tooltip=['cwe_category:N', 'count()']
-).properties(
-    width=chart_width
-).interactive()
-chart_cwe_volume.save(os.path.join(OUTPUT_DIR, 'cwe_volume.html'))
-
-# 2. Distribution of Severity by Vendor
-chart_severity_vendor = alt.Chart(df).mark_bar().encode(
-    x=alt.X('vendor:N', axis=alt.Axis(labelFontSize=font_size, titleFontSize=font_size)),
-    y=alt.Y('count()', axis=alt.Axis(labelFontSize=font_size, titleFontSize=font_size)),
-    color='severity:N',
-    tooltip=['vendor:N', 'severity:N', 'count()']
-).properties(
-    title='Distribution of Severity by Vendor',
-    width=chart_width
-).interactive()
-chart_severity_vendor.save(os.path.join(OUTPUT_DIR, 'severity_vendor.html'))
-
-# 3. Trend of CVSS Scores Over Time
-chart_cvss_trend = alt.Chart(df).mark_line().encode(
-    x=alt.X('published:T', axis=alt.Axis(labelFontSize=font_size, titleFontSize=font_size)),
-    y=alt.Y('mean(cvss_score):Q', axis=alt.Axis(labelFontSize=font_size, titleFontSize=font_size)),
-    tooltip=[alt.Tooltip('published:T', title='Published', formatType='time'),
-             alt.Tooltip('mean(cvss_score):Q', title='Mean CVSS Score', formatType='number')]
-).properties(
-    title='Trend of CVSS Scores Over Time',
-    width=chart_width
-).interactive()
-chart_cvss_trend.save(os.path.join(OUTPUT_DIR, 'cvss_trend.html'))
+    csv_files = sys.argv[1:]
+    for csv_file in csv_files:
+        analyze_dataset(csv_file)
