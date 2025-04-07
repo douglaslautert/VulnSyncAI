@@ -114,8 +114,8 @@ Caso a execução do artefato ofereça qualquer tipo de risco, esta seção deta
 - Recomendação para criar um contêiner:
 
   ```bash
-    docker build -t vuln-builder-ai .
-    docker run -p 8000:8000 vuln-builder-ai
+    docker build -t vulnsyncai .
+    docker run -p 8000:8000 vulnsyncai
   ```
 
 3. **Documentação de Restrições:**
@@ -448,7 +448,7 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Defina a variável de ambiente
-ENV NAME DDSBuilder
+ENV NAME VulnSyncAI
 
 # Execute main.py quando o contêiner for iniciado
 CMD ["python", "src/main.py"]
@@ -459,13 +459,13 @@ CMD ["python", "src/main.py"]
 1.  **Construir a imagem:**
 
     ```bash
-    docker build -t vbuilder .
+    docker build -t vulnsyncai .
     ```
 
 2.  **Executar o container usando IA para categorização:**
 
     ```bash
-    docker run vbuilder python src/main.py --provider 'llama3' --data-source 'nvd' --export-format csv --output-file vulnerabilidades.csv --search-params "OpenDDS" "RTI Connext DDS"
+    docker run vulnsyncai python src/main.py --provider 'llama3' --data-source 'nvd' --export-format csv --output-file vulnerabilidades.csv --search-params "OpenDDS" "RTI Connext DDS"
     ```
 
 3.  **Executar o container sem usar IA para categorização:**
