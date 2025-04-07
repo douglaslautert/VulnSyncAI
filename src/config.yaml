@@ -58,3 +58,7 @@ models_to_evaluate:
     type: "local"
     provider: "perplexity"
     config: "trust_remote_code=True"
+  - model: "DeepHermes-3-Llama-3-8B-Preview"
+    type: "local"
+    provider: "llama3"
+    config: ""
