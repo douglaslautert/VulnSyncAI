@@ -131,8 +131,8 @@ Caso a execução do artefato ofereça qualquer tipo de risco, esta seção deta
 1.  **Clone o repositório:**
 
     ```bash
-    git clone https://github.com/douglasfideles/VulnBuilderAI.git
-    cd VulnBuilderAI
+    git clone https://github.com/douglasfideles/VulnSyncAI.git
+    cd VulnSyncAI
     ```
 
 2.  **Crie um ambiente virtual (recomendado):**
@@ -161,7 +161,7 @@ Caso a execução do artefato ofereça qualquer tipo de risco, esta seção deta
 
 ## Configuração
 
-Você pode configurar o VulnBuilderAI usando _variáveis de ambiente_ ou _argumentos de linha de comando_. A ordem de prioridade é: argumentos de linha de comando > variáveis de ambiente.
+Você pode configurar o VulnSyncAI usando _variáveis de ambiente_ ou _argumentos de linha de comando_. A ordem de prioridade é: argumentos de linha de comando > variáveis de ambiente.
 
 1.  **Arquivo de configuração (opcional):**
     _Não implementado no código fornecido._ Se você quisesse adicionar um arquivo de configuração (e.g., `config.ini` ou `config.yaml`), precisaria modificar o código (`main.py`) para ler as configurações desse arquivo.
@@ -504,7 +504,7 @@ O código-fonte está organizado da seguinte forma:
 
 ## Extensibilidade
 
-O VulnBuilderAI foi projetado para ser extensível, permitindo a adição de novas fontes de dados, normalizadores e formatos de saída de forma simples e organizada. A arquitetura modular da ferramenta facilita a integração de novos componentes sem a necessidade de modificar o código principal. A seguir, descrevemos como adicionar novas fontes de dados e novos formatos de saída.
+O VulnSyncAI foi projetado para ser extensível, permitindo a adição de novas fontes de dados, normalizadores e formatos de saída de forma simples e organizada. A arquitetura modular da ferramenta facilita a integração de novos componentes sem a necessidade de modificar o código principal. A seguir, descrevemos como adicionar novas fontes de dados e novos formatos de saída.
 
 ### Adicionando Novas Fontes de Dados
 
