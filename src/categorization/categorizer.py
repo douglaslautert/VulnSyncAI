@@ -1,6 +1,7 @@
 import json
 import re
 from datetime import datetime as dt
+from openai import OpenAI, AsyncOpenAI
 import os
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
